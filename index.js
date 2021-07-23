@@ -2,8 +2,12 @@
 
 'use strict';
 
+const {readFileSync} = require('fs');
+
 const {compare} = new Intl.Collator('en');
 const DEPS_NAMES = ['dependencies', 'devDependencies', 'peerDependencies', 'optionalDependencies'];
+
+const copyObjectWithoutPrototype = (object) => Object.assign(Object.create(null), object);
 
 const parseDepsAndAddErrors = ({depsName, deps, errors, lockDeps, optionalDeps}) => {
   const names = new Set([...Object.keys(deps), ...Object.keys(lockDeps)].sort(compare));
@@ -37,11 +41,15 @@ const parseDepsAndAddErrors = ({depsName, deps, errors, lockDeps, optionalDeps})
   }
 };
 
-const copyObjectWithoutPrototype = (object) => Object.assign(Object.create(null), object);
+const readAndParseJsonFile = (pathToJsonFile) => {
+  const fileText = readFileSync(pathToJsonFile, 'utf8');
+
+  return JSON.parse(fileText);
+};
 
 const assertPackageLockIsConsistent = () => {
-  const packageJson = require('package.json');
-  const packageLockJson = require('package-lock.json');
+  const packageJson = readAndParseJsonFile('package.json');
+  const packageLockJson = readAndParseJsonFile('package-lock.json');
 
   const optionalDeps = copyObjectWithoutPrototype(packageJson.optionalDependencies);
   const packageJsonFromLock = packageLockJson.packages[''];
