@@ -1,0 +1,21 @@
+{
+  "name": "assert-package-lock-is-consistent",
+  "version": "0.0.1",
+  "description": "Assert that package-lock.json is consistent with package.json",
+  "keywords": [
+    "package-lock",
+    "package-lock.json",
+    "package.json",
+    "dependencies"
+  ],
+  "author": "uid11",
+  "license": "MIT",
+  "bin": "index.js",
+  "bugs": "https://github.com/uid11/assert-package-lock-is-consistent/issues",
+  "engines": {
+    "node": ">=14"
+  },
+  "homepage": "https://github.com/uid11/assert-package-lock-is-consistent#readme",
+  "repository": "uid11/assert-package-lock-is-consistent",
+  "types": "index.d.ts"
+}
