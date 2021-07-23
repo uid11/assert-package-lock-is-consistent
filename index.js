@@ -9,25 +9,25 @@ const DEPS_NAMES = ['dependencies', 'devDependencies', 'peerDependencies', 'opti
 
 const copyObjectWithoutPrototype = (object) => Object.assign(Object.create(null), object);
 
-const parseDepsAndAddErrors = ({depsName, deps, errors, lockDeps, optionalDeps}) => {
+const parseDepsAndAddErrors = ({depName, deps, errors, lockDeps, optionalDeps}) => {
   const names = new Set([...Object.keys(deps), ...Object.keys(lockDeps)].sort(compare));
 
   for (const name of names) {
     if (name in deps && !(name in lockDeps)) {
       errors.push(
-        `- dependency "${name}" is present in the package.json's ${depsName} and is absent in the package-lock.json's ${depsName}`,
+        `- ${depName} "${name}" is present in the package.json and is absent in the package-lock.json`,
       );
 
       continue;
     }
 
     if (!(name in deps) && name in lockDeps) {
-      if (depsName === 'dependencies' && name in optionalDeps) {
+      if (depName === 'dependency' && name in optionalDeps) {
         continue;
       }
 
       errors.push(
-        `- dependency "${name}" is absent in the package.json's ${depsName} and is present in the package-lock.json's ${depsName}`,
+        `- ${depName} "${name}" is absent in the package.json and is present in the package-lock.json`,
       );
 
       continue;
@@ -35,7 +35,7 @@ const parseDepsAndAddErrors = ({depsName, deps, errors, lockDeps, optionalDeps})
 
     if (deps[name] !== lockDeps[name]) {
       errors.push(
-        `- dependency "${name}" has version "${deps[name]}" in the package.json's ${depsName} and has version "${lockDeps[name]}" in the package-lock.json's ${depsName}`,
+        `- ${depName} "${name}" has version "${deps[name]}" in the package.json and has version "${lockDeps[name]}" in the package-lock.json`,
       );
     }
   }
@@ -57,10 +57,11 @@ const assertPackageLockIsConsistent = () => {
   const errors = [];
 
   for (const depsName of DEPS_NAMES) {
+    const depName = depsName.replace('ies', 'y');
     const deps = copyObjectWithoutPrototype(packageJson[depsName]);
     const lockDeps = copyObjectWithoutPrototype(packageJsonFromLock[depsName]);
 
-    parseDepsAndAddErrors({depsName, deps, errors, lockDeps, optionalDeps});
+    parseDepsAndAddErrors({depName, deps, errors, lockDeps, optionalDeps});
   }
 
   if (errors.length !== 0) {
