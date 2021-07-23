@@ -15,7 +15,7 @@ const parseDepsAndAddErrors = ({depsName, deps, errors, lockDeps, optionalDeps})
   for (const name of names) {
     if (name in deps && !(name in lockDeps)) {
       errors.push(
-        `Dependency "${name}" is present in the package.json's ${depsName} and is absent in the package-lock.json's ${depsName}`,
+        `- dependency "${name}" is present in the package.json's ${depsName} and is absent in the package-lock.json's ${depsName}`,
       );
 
       continue;
@@ -27,7 +27,7 @@ const parseDepsAndAddErrors = ({depsName, deps, errors, lockDeps, optionalDeps})
       }
 
       errors.push(
-        `Dependency "${name}" is absent in the package.json's ${depsName} and is present in the package-lock.json's ${depsName}`,
+        `- dependency "${name}" is absent in the package.json's ${depsName} and is present in the package-lock.json's ${depsName}`,
       );
 
       continue;
@@ -35,7 +35,7 @@ const parseDepsAndAddErrors = ({depsName, deps, errors, lockDeps, optionalDeps})
 
     if (deps[name] !== lockDeps[name]) {
       errors.push(
-        `Dependency "${name}" has version "${deps[name]}" in the package.json's ${depsName} and has version "${lockDeps[name]}" in the package-lock.json's ${depsName}`,
+        `- dependency "${name}" has version "${deps[name]}" in the package.json's ${depsName} and has version "${lockDeps[name]}" in the package-lock.json's ${depsName}`,
       );
     }
   }
@@ -75,7 +75,7 @@ class AssertPackageLockIsConsistentError extends Error {
     super(
       `package-lock.json is not consistent with package.json.\nThese files contain the following ${
         errors.length
-      } differences in dependencies: ${errors.join('\n')}`,
+      } differences in dependencies:\n${errors.join('\n')}`,
     );
   }
 }
