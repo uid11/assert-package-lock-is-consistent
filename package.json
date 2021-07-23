@@ -1,6 +1,6 @@
 {
   "name": "assert-package-lock-is-consistent",
-  "version": "0.0.4",
+  "version": "1.0.0",
   "description": "Assert that package-lock.json is consistent with package.json",
   "keywords": [
     "package-lock",
